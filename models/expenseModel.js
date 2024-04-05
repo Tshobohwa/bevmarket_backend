@@ -14,6 +14,12 @@ const expenseSchema = mongoose.Schema({
   createdAt: {
     type: String,
   },
+  currency: {
+    type: String,
+    required: true,
+    enum: ["Fc"],
+    trim: true,
+  },
 });
 
 expenseSchema.pre("save", function (next) {
