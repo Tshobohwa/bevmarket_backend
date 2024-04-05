@@ -11,6 +11,7 @@ app.use(express.json());
 
 app.use((req, _, next) => {
   req.createdAt = new Date().toISOString();
+  console.log(`Querying ${req.originalUrl} at ${req.createdAt}`);
   next();
 });
 
