@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon server.js NODE_ENV=dev"
+    "start:dev": "nodemon server.js NODE_ENV=dev",
+    "start:prod": "nodemon server.js NODE_ENV=prod"
   },
   "author": "Salomon Tshobohwa",
   "license": "ISC",
