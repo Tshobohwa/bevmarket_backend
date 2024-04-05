@@ -1,6 +1,7 @@
 const Client = require("./../models/clientModel");
+const catchAsync = require("../utils/catchAsync");
 
-exports.getClients = async (req, res) => {
+exports.getClients = catchAsync(async (req, res) => {
   const clients = await Client.find();
 
   res.status(200).json({
@@ -9,9 +10,9 @@ exports.getClients = async (req, res) => {
       clients,
     },
   });
-};
+});
 
-exports.postClient = async (req, res) => {
+exports.postClient = catchAsync(async (req, res) => {
   const client = await Client.create(req.body.client);
 
   res.status(201).json({
@@ -20,4 +21,4 @@ exports.postClient = async (req, res) => {
       client,
     },
   });
-};
+});

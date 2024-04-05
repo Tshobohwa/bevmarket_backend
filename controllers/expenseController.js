@@ -1,6 +1,7 @@
 const Expense = require("../models/expenseModel");
+const catchAsync = require("../utils/catchAsync");
 
-exports.getExpenses = async (req, res) => {
+exports.getExpenses = catchAsync(async (req, res) => {
   const expenses = await Expense.find();
   res.status(200).json({
     status: "success",
@@ -8,9 +9,9 @@ exports.getExpenses = async (req, res) => {
       expenses,
     },
   });
-};
+});
 
-exports.postExpense = async (req, res) => {
+exports.postExpense = catchAsync(async (req, res) => {
   const expense = await Expense.create(req.body.expense);
   res.status(201).json({
     status: "success",
@@ -18,4 +19,4 @@ exports.postExpense = async (req, res) => {
       expense,
     },
   });
-};
+});
