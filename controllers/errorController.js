@@ -1,5 +1,6 @@
 const globalErrorHandler = (err, _, res, __) => {
-  res.status(err.statusCode).json(err);
+  console.log(err);
+  res.status(err.statusCode || 500).json(err);
 };
 
 module.exports = globalErrorHandler;

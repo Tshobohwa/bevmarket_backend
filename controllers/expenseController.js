@@ -12,7 +12,7 @@ exports.getExpenses = catchAsync(async (req, res) => {
 });
 
 exports.postExpense = catchAsync(async (req, res) => {
-  console.req.body;
+  console.log(req.body);
   const expense = await Expense.create(req.body.expense);
   res.status(201).json({
     status: "success",
