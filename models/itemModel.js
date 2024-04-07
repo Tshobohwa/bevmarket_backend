@@ -21,16 +21,6 @@ const itemSchema = mongoose.Schema({
     min: 1,
     required: true,
   },
-  unitSalePrice: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
 });
 
 itemSchema.pre("save", function (next) {

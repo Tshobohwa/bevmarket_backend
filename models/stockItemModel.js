@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const stockItemSchema = mongoose.Schema({
-  itemId: {
+  item: {
     type: String,
     required: true,
   },
