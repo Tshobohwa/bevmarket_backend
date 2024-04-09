@@ -9,4 +9,6 @@ router
   .post(stockItemController.postStockItem)
   .delete(stockItemController.deleteAllStockItems);
 
+router.route("/:id").put(stockItemController.updateStockItem);
+
 module.exports = router;

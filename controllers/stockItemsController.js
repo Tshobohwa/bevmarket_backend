@@ -54,6 +54,39 @@ exports.getStockItems = catchAsync(async (req, res) => {
   });
 });
 
+exports.updateStockItem = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { updates } = req.body;
+
+  const oldStockItem = await StockItem.findById(id);
+
+  if (!oldStockItem)
+    return res.status(404).json({
+      status: "fail",
+      message: `No stock item with id ${id}`,
+    });
+
+  const quantity = oldStockItem.quantity + (updates.quantity || 0);
+  const unitBuyPrice =
+    (oldStockItem.quantity * oldStockItem.unitBuyPrice +
+      (updates.unitBuyPrice || 0) * (updates.quantity || 0)) /
+    quantity;
+  const unitSalePrice = updates.unitSalePrice;
+
+  const newItem = { ...oldStockItem, quantity, unitBuyPrice, unitSalePrice };
+
+  const stockItem = await StockItem.findOneAndUpdate({ _id: id }, newItem, {
+    new: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      stockItem,
+    },
+  });
+});
+
 exports.deleteAllStockItems = catchAsync(async (req, res) => {
   await StockItem.deleteMany();
   await Item.deleteMany();
