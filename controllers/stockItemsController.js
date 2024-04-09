@@ -59,6 +59,7 @@ exports.updateStockItem = catchAsync(async (req, res) => {
   const { updates } = req.body;
 
   const oldStockItem = await StockItem.findById(id);
+  console.log(oldStockItem);
 
   if (!oldStockItem)
     return res.status(404).json({
@@ -66,14 +67,16 @@ exports.updateStockItem = catchAsync(async (req, res) => {
       message: `No stock item with id ${id}`,
     });
 
-  const quantity = oldStockItem.quantity + (updates.quantity || 0);
+  const quantity = oldStockItem.quantity + updates.quantity;
   const unitBuyPrice =
     (oldStockItem.quantity * oldStockItem.unitBuyPrice +
-      (updates.unitBuyPrice || 0) * (updates.quantity || 0)) /
+      updates.unitBuyPrice * updates.quantity) /
     quantity;
   const unitSalePrice = updates.unitSalePrice;
 
-  const newItem = { ...oldStockItem, quantity, unitBuyPrice, unitSalePrice };
+  const newItem = { quantity, unitBuyPrice, unitSalePrice };
+
+  console.log(newItem);
 
   const stockItem = await StockItem.findOneAndUpdate({ _id: id }, newItem, {
     new: true,
