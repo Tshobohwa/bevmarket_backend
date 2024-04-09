@@ -6,6 +6,7 @@ const router = express.Router();
 router
   .route("/")
   .get(stockItemController.getStockItems)
-  .post(stockItemController.postStockItem);
+  .post(stockItemController.postStockItem)
+  .delete(stockItemController.deleteAllStockItems);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const itemRoutes = require("./routes/itemRoutes");
 const clientRoutes = require("./routes/clientRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const stockItemRoutes = require("./routes/stockItemsRoutes");
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use((req, _, next) => {
 app.use("/api/v1/items", itemRoutes);
 app.use("/api/v1/clients", clientRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
-app.use("/api/v1/stock-items", expenseRoutes);
+app.use("/api/v1/stock-items", stockItemRoutes);
 
 app.all("*", (req, _, next) => {
   const err = new AppError(`route ${req.originalUrl} not found`, 404);

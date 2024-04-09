@@ -11,11 +11,11 @@ const itemSchema = mongoose.Schema({
     required: true,
     min: 0,
   },
-  capacityUnit: {
-    type: String,
-    enum: ["cl", "ml", "l"],
-    required: true,
-  },
+  // capacityUnit: {
+  //   type: String,
+  //   enum: ["cl", "ml", "l"],
+  //   required: true,
+  // },
   bottlesNumber: {
     type: Number,
     min: 1,
@@ -32,7 +32,10 @@ itemSchema.pre("save", function (next) {
   next();
 });
 
-itemSchema.index({ name: 1, capacity: 1, bottlesNumber: 1 }, { unique: true });
+itemSchema.index(
+  { name: 1, capacity: 1, bottlesNumber: 1, capacityUnit: 1 },
+  { unique: true }
+);
 
 const Item = mongoose.model("Item", itemSchema);
 

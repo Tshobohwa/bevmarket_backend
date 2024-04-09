@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const stockItemSchema = mongoose.Schema({
-  itemId: {
-    type: String,
+  item: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item",
     required: true,
   },
   quantity: {
