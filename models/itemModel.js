@@ -11,11 +11,11 @@ const itemSchema = mongoose.Schema({
     required: true,
     min: 0,
   },
-  // capacityUnit: {
-  //   type: String,
-  //   enum: ["cl", "ml", "l"],
-  //   required: true,
-  // },
+  capacityUnit: {
+    type: String,
+    enum: ["cl", "ml", "l"],
+    required: true,
+  },
   bottlesNumber: {
     type: Number,
     min: 1,
