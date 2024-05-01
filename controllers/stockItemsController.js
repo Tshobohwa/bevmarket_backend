@@ -58,6 +58,8 @@ exports.updateStockItem = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { updates } = req.body;
 
+  console.log(updates);
+
   const oldStockItem = await StockItem.findById(id);
 
   if (!oldStockItem)
