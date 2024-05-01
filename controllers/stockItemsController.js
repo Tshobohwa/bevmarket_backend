@@ -59,7 +59,6 @@ exports.updateStockItem = catchAsync(async (req, res) => {
   const { updates } = req.body;
 
   const oldStockItem = await StockItem.findById(id);
-  console.log(oldStockItem);
 
   if (!oldStockItem)
     return res.status(404).json({
@@ -75,8 +74,6 @@ exports.updateStockItem = catchAsync(async (req, res) => {
   const unitSalePrice = updates.unitSalePrice;
 
   const newItem = { quantity, unitBuyPrice, unitSalePrice };
-
-  console.log(newItem);
 
   const stockItem = await StockItem.findOneAndUpdate({ _id: id }, newItem, {
     new: true,
