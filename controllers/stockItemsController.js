@@ -84,6 +84,8 @@ exports.updateStockItem = catchAsync(async (req, res) => {
     new: true,
   });
 
+  console.log(stockItem);
+
   res.status(200).json({
     status: "success",
     data: {
