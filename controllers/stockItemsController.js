@@ -75,7 +75,10 @@ exports.updateStockItem = catchAsync(async (req, res) => {
     quantity;
   const unitSalePrice = updates.unitSalePrice;
 
-  const newItem = { quantity, unitBuyPrice, unitSalePrice };
+  let newItem = { quantity, unitBuyPrice, unitSalePrice };
+  unitSalePrice
+    ? (newItem = { unitSalePrice })
+    : (newItem = { quantity, unitBuyPrice });
 
   const stockItem = await StockItem.findOneAndUpdate({ _id: id }, newItem, {
     new: true,
