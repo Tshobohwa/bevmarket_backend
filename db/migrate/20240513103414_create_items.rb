@@ -4,7 +4,7 @@ class CreateItems < ActiveRecord::Migration[7.1]
       t.string :name
       t.integer :bottles_number
       t.integer :capacity
-      t.integer :capacity_unit
+      t.string :capacity_unit
 
       t.timestamps
     end

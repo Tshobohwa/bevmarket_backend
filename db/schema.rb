@@ -10,17 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_13_103414) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_04_021749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "clients", force: :cascade do |t|
+    t.string "names"
+    t.string "phone_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.decimal "amount"
+    t.text "raison"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.integer "bottles_number"
     t.integer "capacity"
-    t.integer "capacity_unit"
+    t.string "capacity_unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.integer "stock_item_id"
+    t.decimal "quantity"
+    t.decimal "unit_sale_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stock_item_id"], name: "index_sales_on_stock_item_id"
+  end
+
+  create_table "stock_items", force: :cascade do |t|
+    t.integer "item_id"
+    t.decimal "quantity"
+    t.decimal "last_unit_buy_price"
+    t.decimal "reduction_sale_price"
+    t.decimal "unit_sale_price"
+    t.decimal "average_unit_buy_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_stock_items_on_item_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -30,4 +65,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_103414) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "sales", "stock_items"
+  add_foreign_key "stock_items", "items"
 end
