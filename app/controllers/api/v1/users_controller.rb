@@ -1,16 +1,22 @@
 class Api::V1::UsersController < ApplicationController
+  before_action :find_user, only: [:update, :destroy, :show]
   # GET api/v1/users
   def index
     @users = User.all
     render json: {status: 'success', data: {users: @users}}
   end
 
-  #POST api/v1/users
+  # GET api/v1/users/:id
+  def show
+      render json: {status: "success", data: {user: @user}}
+  end
+
+  # POST api/v1/users
   def create
     @user = User.new(user_params)
 
     if @user.save
-      render json: { status: 'success', data: {user: @user } }
+      render json: { status: 'success', data: {user: @user } }, status: :created
     else
       render json: {status: 'fail', error: {message: "Couldn't create user" } }, status: :unprocessable_entity
     end
@@ -18,7 +24,16 @@ class Api::V1::UsersController < ApplicationController
 
   # UPDATE api/v1/users/:id
   def update
+    if @user.update(user_params)
+      render json: {status: "success", data: { user: @user } }
+    else
+      render json: {status: "fail", error: {message: "Couldn't update user"}}, status: :unprocessable_entity
+    end
+  end
 
+  # DELETE api/v1/:id
+  def destroy
+    @user.destroy
   end
 
   private
