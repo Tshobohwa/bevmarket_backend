@@ -2,6 +2,6 @@ class Item < ApplicationRecord
   validates :name, presence: :true
   validates :bottles_number, presence: :true
   validates :capacity, presence: :true
-  validates :capacity_unit, default: 'cl'
+  # validates :capacity_unit, default: 'cl'
   # enums capacity_unit: [:dl, :ml, :cl]
 end
