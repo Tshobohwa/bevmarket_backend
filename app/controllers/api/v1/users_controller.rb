@@ -37,15 +37,16 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
-  # Serialize user params
-  def user_params
-    request.params(:user).permit(:name, :email)
-  end
 
   # find user by id param
   def find_user
       @user = User.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: {status:'fail', error: {message: 'Item not found'}}, status: :unprocessable_entity
+  end
+
+  # Serialize user params
+  def user_params
+    params.require(:user).permit(:name, :email)
   end
 end

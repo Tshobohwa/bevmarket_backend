@@ -13,7 +13,7 @@ class Api::V1::ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     if @item.save
-      render json: {status: 'success', data: {item: @item}}
+      render json: {status: 'success', data: {item: @item}}, status: :created
     else
       render json: {status: 'fail', error: {message: "Couldn't create item", error: @item.errors}}, status: :unprocessable_entity
     end
@@ -40,6 +40,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def item_params
-    request.params(:item).permit(:name, :capacity_unit, :capacity, :bottles_number)
+    params.require(:item).permit(:name, :capacity_unit, :capacity, :bottles_number)
   end
 end
