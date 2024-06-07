@@ -36,7 +36,7 @@ class Api::V1::ItemsController < ApplicationController
   def set_item
     @item = Item.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: {status:'fail', error: {message: 'Item not found'}}, status: :unprocessable_entity
+    render json: {status:'fail', error: {message: 'Item not found'}}, status: :not_found
   end
 
   def item_params

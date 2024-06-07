@@ -11,6 +11,9 @@ Rails.application.routes.draw do
         namespace :v1 do
           resources :users
           resources :items
+          resources :stock_items
+          resources :expenses
+          resources :clients
         end
   end
 end
