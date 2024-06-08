@@ -27,7 +27,9 @@ class Api::V1::StockItemsController < ApplicationController
 
   # UPDATE api/v1/stock_items/:id
   def update
+    # update either the sale prices or the stock quantity according to the update mode
     case @update_mode
+    # update the quantity
     when 'is_adding_to_stock'
       # Add available quantity to new quantity
       quantity = stock_item_params[:quantity] + @stock_item[:quantity]
@@ -42,18 +44,22 @@ class Api::V1::StockItemsController < ApplicationController
       # and quantity of the request and those of the database
       average_unit_buy_price = ((stock_item_params[:unit_buy_price] * stock_item_params[:quantity] + @stock_item[:average_unit_buy_price] * @stock_item[:quantity]) / (@stock_item[:quantity] + stock_item_params[:quantity])).round(2)
 
+      # Update the stock item in the database
       if @stock_item.update({quantity: quantity, last_unit_buy_price: last_unit_buy_price, average_unit_buy_price: average_unit_buy_price})
         render json: {status: "success", data: {stock_item: @stock_item}}
       else
         render json: {status: "fail", error: {message: "Couldn't update stock item"}}, status: :unprocessable_entity
       end
+    # Update the sale prices
     when 'is_updating_price'
+      # update only unit sale price and reduction unit sale price
       if  @stock_item.update({unit_sale_price: stock_item_params[:unit_sale_price], reduction_sale_price: stock_item_params[:reduction_sale_price]})
         render json: {status: "success", data: {stock_item: @stock_item}}
       else
         render json: {status: "fail", error: {message: "Couldn't update stock item"}}, status: :unprocessable_entity
       end
     else
+      # render unprocessable entity when no update mode provided
       render json: {status: "fail", error: {message: "please provide update mode"}}, status: :unprocessable_entity
     end
   end
