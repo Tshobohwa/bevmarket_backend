@@ -1,0 +1,72 @@
+class Api::V1::SalesController < ApplicationController
+  # GET api/v1/sales
+  def index
+    @sales = Sale.includes(:client, :user, sale_items: :stock_item).all
+
+    render json: {status: "success", data: {sales: @sales} }
+  end
+
+  # GET api/v1/sales/:id
+  def show
+    @sale = Sale.includes(:client, :user, sale_items: :stock_item).find(params[:id])
+
+    render json: {status: "success", data: {sale: @sale}}
+
+  rescue ActiveRecord::RecordNotFound
+      render json: {status: "fail", error: {message: "Sale not found"}}, status: :not_found
+  end
+
+  # POST api/v1/sales
+  def create
+    # Extract the sale items array fro the request params
+    sale_items = sale_params[:sale_items]
+
+    # Verify if sale item quantity is less than stock item quantity else render error unprocessable entity
+    sale_items.each do |sale_item|
+      stock_item = StockItem.find(sale_item[:stock_item_id])
+      if stock_item[:quantity] < sale_item[:quantity]
+        render json: { status: "fail", error: {message: "Not enought items in stock", stock_item: stock_item}}, status: :unprocessable_entity
+        return
+      end
+    end
+
+    # Create the sale
+    sale = Sale.new(user_id: sale_params[:user_id], client_id: sale_params[:client_id])
+
+    if sale.save
+      # When the sale is saved in the database:
+      # Create the sale items of that sale
+      # And substract the quantity of the stock items
+      sale_items.each do |sale_item|
+
+        # create each sale item
+        SaleItem.create(stock_item_id: sale_item[:stock_item_id], sale_id: sale[:id], quantity: sale_item[:quantity], unit_sale_price: sale_item[:unit_sale_price])
+
+        # Substract the quantity of the sale item
+        stock_item = StockItem.find(sale_item[:stock_item_id])
+        new_quantity = stock_item[:quantity] - sale_item[:quantity]
+
+        # update the stock item new quantity in the database
+        stock_item.update({quantity: new_quantity})
+      end
+
+      # Select joinded sale, client, user and sale item for rendering
+      @sale = Sale.includes(:client, :user, sale_items: :stock_item).find(sale[:id])
+
+      # Select stock items for rendering since theire quantities have been updated
+      @stock_items = StockItem.includes(:item).all
+
+      # render the sale and the stock items in a json response
+      render json: {status: "success", data: {sale: @sale, stock_items: @stock_items}}, status: :created
+    else
+      render json: {status: "fail", error: {message: "Couldn't create sale"}}, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  # Permit new sale params
+  def sale_params
+    params.require(:sale).permit(:user_id, :client_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
+  end
+end

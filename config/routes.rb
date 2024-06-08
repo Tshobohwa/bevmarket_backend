@@ -12,8 +12,9 @@ Rails.application.routes.draw do
           resources :users
           resources :items
           resources :stock_items
-          resources :expenses
+          resources :expenses, only: [:index, :create, :show]
           resources :clients
+          resources :sales, only: [:index, :create, :show]
         end
   end
 end
