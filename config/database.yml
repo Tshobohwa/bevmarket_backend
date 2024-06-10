@@ -86,4 +86,4 @@ production:
   database: bevmarket_sql_db
   username: bevmarket_sql_db_user
   password: <%= ENV["BEVMARKET_BACKEND_DATABASE_PASSWORD"] %>
-  port: 5432
+  port: <%= ENV["DATABASE_PORT"] %>
