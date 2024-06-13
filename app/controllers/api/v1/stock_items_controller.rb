@@ -1,5 +1,5 @@
 class Api::V1::StockItemsController < ApplicationController
-  before_action :find_stock_item, only: [:update, :destroy]
+  before_action :find_stock_item, only: [:update, :destroy, :show]
   before_action :update_mode, only: [:update]
 
   # GET api/v1/stock_items
