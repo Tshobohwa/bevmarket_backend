@@ -33,7 +33,6 @@ class Api::V1::StockItemsController < ApplicationController
     when 'is_adding_to_stock'
       # Add available quantity to new quantity
       quantity = stock_item_params[:quantity] + @stock_item[:quantity]
-      puts "quantity = #{quantity}"
 
       # set the last unit buy price to the unit buy price of the request
       last_unit_buy_price = stock_item_params[:unit_buy_price]
@@ -71,7 +70,6 @@ class Api::V1::StockItemsController < ApplicationController
   private
 
   def find_stock_item
-    puts "request id #{params[:id]}"
     @stock_item = StockItem.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: {status: "fail", error: { message: "Couldn't find stock item" } }, status: :not_found
