@@ -37,7 +37,6 @@ class Api::V1::StockItemsController < ApplicationController
 
       # set the last unit buy price to the unit buy price of the request
       last_unit_buy_price = stock_item_params[:unit_buy_price]
-      puts "last unit buy price = #{last_unit_buy_price}"
 
       # Calculate the average unit buy price
       # by getting the average between the unit buy price
