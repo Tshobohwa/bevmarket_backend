@@ -45,3 +45,12 @@ group :development do
   # gem "spring"
 end
 
+
+# Use devise gem as the session and account manager for the application.
+gem "devise", "~> 4.9"
+
+# Use devise jwt for javascript web token based authentication
+gem 'devise-jwt'
+
+# Use jsonapi-serializer for serializing responses
+gem 'jsonapi-serializer'
