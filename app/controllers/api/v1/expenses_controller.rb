@@ -17,7 +17,7 @@ class Api::V1::ExpensesController < ApplicationController
     @expense = Expense.new(expense_params)
 
     if @expense.save
-      render json: {status: "success", data: {expense: @expense}}
+      render json: {status: "success", data: {expense: @expense}}, status: :created
     else
       render json: {status: "fail", error: {message: "Couldn't create expense"}}, status: :unprocessable_entity
     end
