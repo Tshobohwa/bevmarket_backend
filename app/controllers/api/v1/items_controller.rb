@@ -13,8 +13,7 @@ class Api::V1::ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     if @item.save
-      @stock_item = StockItem.new(stock_item_params.merge(item_id: @item.id))
-      @stock_item.save
+      @stock_item = StockItem.create(stock_item_params.merge(item_id: @item.id))
       render json: {status: 'success', data: {item: @item, stock_item: @stock_item}}, status: :created
     else
       render json: {status: 'fail', error: {message: "Couldn't create item", error: @item.errors}}, status: :unprocessable_entity
@@ -46,6 +45,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def stock_item_params
-    params.require(:stock_item).permit( :reduction_sale_price, :unit_buy_price, :unit_sale_price, :quantity)
+    params.require(:stock_item).permit( :reduction_sale_price, :unit_sale_price, :quantity, :last_unit_buy_price, :average_unit_buy_price)
   end
 end
