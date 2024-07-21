@@ -51,7 +51,7 @@ class Api::V1::SalesController < ApplicationController
       end
 
       # Select joinded sale, client, user and sale item for rendering
-      @sale = Sale.includes(:client, :user, sale_items: :stock_item).find(sale[:id])
+      @sale = Sale.includes(:client, :user, :sale_items).find(sale[:id])
 
       # Select stock items for rendering since theire quantities have been updated
       @stock_items = StockItem.includes(:item).all
