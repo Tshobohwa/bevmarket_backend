@@ -57,7 +57,7 @@ class Api::V1::SalesController < ApplicationController
       @stock_items = StockItem.includes(:item).all
 
       # render the sale and the stock items in a json response
-      render json: {status: "success", data: {sale: @sale, stock_items: @stock_items}}, status: :created
+      render json: {status: "success", data: {sale: @sale.as_json(include: [:client, :user, :sale_items]), stock_items: @stock_items}}, status: :created
     else
       render json: {status: "fail", error: {message: "Couldn't create sale"}}, status: :unprocessable_entity
     end
