@@ -14,7 +14,7 @@ class Api::V1::ItemsController < ApplicationController
     @item = Item.new(item_params)
     if @item.save
       @stock_item = StockItem.create(stock_item_params.merge(item_id: @item.id))
-      render json: {status: 'success', data: {item: @item, stock_item: @stock_item}}, status: :created
+      render json: {status: 'success', data: {item: @item, stock_item: @stock_item.as_json(include: :item)}}, status: :created
     else
       render json: {status: 'fail', error: {message: "Couldn't create item", error: @item.errors}}, status: :unprocessable_entity
     end

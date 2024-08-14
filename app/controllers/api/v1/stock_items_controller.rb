@@ -44,7 +44,7 @@ class Api::V1::StockItemsController < ApplicationController
 
       # Update the stock item in the database
       if @stock_item.update({quantity: quantity, last_unit_buy_price: last_unit_buy_price, average_unit_buy_price: average_unit_buy_price})
-        render json: {status: "success", data: {stock_item: @stock_item}}
+        render json: {status: "success", data: {stock_item: @stock_item.as_json(include: :item)}}
       else
         render json: {status: "fail", error: {message: "Couldn't update stock item"}}, status: :unprocessable_entity
       end
@@ -52,7 +52,7 @@ class Api::V1::StockItemsController < ApplicationController
     when 'is_updating_price'
       # update only unit sale price and reduction unit sale price
       if  @stock_item.update({unit_sale_price: stock_item_params[:unit_sale_price], reduction_sale_price: stock_item_params[:reduction_sale_price]})
-        render json: {status: "success", data: {stock_item: @stock_item}}
+        render json: {status: "success", data: {stock_item: @stock_item.as_json(include: :item)}}
       else
         render json: {status: "fail", error: {message: "Couldn't update stock item"}}, status: :unprocessable_entity
       end
