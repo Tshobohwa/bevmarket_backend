@@ -52,6 +52,6 @@ class Api::V1::ClientsController < ApplicationController
 
   # Permit client request params
   def client_params
-    params.require(:client).permit(:name, :phone_number)
+    params.require(:client).permit(:name, :phone_number, :is_partener, :credit)
   end
 end
