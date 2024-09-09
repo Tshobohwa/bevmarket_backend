@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_29_135012) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_213433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_135012) do
     t.boolean "is_partener", default: false, null: false
     t.float "credit", default: 0.0, null: false
     t.index ["phone_number"], name: "index_clients_on_phone_number", unique: true
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "role"
+    t.integer "establishment_id"
+    t.integer "user_id"
+    t.integer "sale_point_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["establishment_id"], name: "index_employees_on_establishment_id"
+    t.index ["sale_point_id"], name: "index_employees_on_sale_point_id"
+    t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
   create_table "establishments", force: :cascade do |t|
@@ -49,6 +61,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_135012) do
     t.decimal "unit_sale_price"
     t.index ["sale_id"], name: "index_sale_items_on_sale_id"
     t.index ["stock_item_id"], name: "index_sale_items_on_stock_item_id"
+  end
+
+  create_table "sale_point_stock_items", force: :cascade do |t|
+    t.integer "stock_item_id"
+    t.integer "sale_point_id"
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_point_id"], name: "index_sale_point_stock_items_on_sale_point_id"
+    t.index ["stock_item_id"], name: "index_sale_point_stock_items_on_stock_item_id"
+  end
+
+  create_table "sale_point_stok_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sale_points", force: :cascade do |t|
+    t.string "name"
+    t.string "type"
+    t.string "address"
+    t.integer "establishment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["establishment_id"], name: "index_sale_points_on_establishment_id"
   end
 
   create_table "sales", force: :cascade do |t|
@@ -84,9 +121,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_135012) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "employees", "establishments"
+  add_foreign_key "employees", "sale_points"
+  add_foreign_key "employees", "users"
   add_foreign_key "expenses", "users"
   add_foreign_key "sale_items", "sales"
   add_foreign_key "sale_items", "stock_items"
+  add_foreign_key "sale_point_stock_items", "sale_points"
+  add_foreign_key "sale_point_stock_items", "stock_items"
+  add_foreign_key "sale_points", "establishments"
   add_foreign_key "sales", "clients"
   add_foreign_key "sales", "users"
   add_foreign_key "stock_items", "items"

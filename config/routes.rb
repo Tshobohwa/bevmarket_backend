@@ -26,6 +26,7 @@ Rails.application.routes.draw do
           resources :expenses, only: [:index, :create, :show]
           resources :clients
           resources :sales, only: [:index, :create, :show]
+          resources :establishements
         end
   end
 end

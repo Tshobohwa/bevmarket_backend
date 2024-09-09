@@ -71,7 +71,7 @@ class Api::V1::StockItemsController < ApplicationController
 
   def find_stock_item
     @stock_item = StockItem.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
+  rescue ActiveRecord::RecordNotFound
       render json: {status: "fail", error: { message: "Couldn't find stock item" } }, status: :not_found
   end
 
