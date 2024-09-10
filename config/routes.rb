@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           resources :sales, only: [:index, :create, :show]
           resources :establishements
           resources :employees
+          resources :sale_points
         end
   end
 end
