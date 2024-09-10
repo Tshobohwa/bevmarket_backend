@@ -73,11 +73,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_213433) do
     t.index ["stock_item_id"], name: "index_sale_point_stock_items_on_stock_item_id"
   end
 
-  create_table "sale_point_stok_items", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "sale_points", force: :cascade do |t|
     t.string "name"
     t.string "type"

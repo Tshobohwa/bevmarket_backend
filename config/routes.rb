@@ -26,7 +26,7 @@ Rails.application.routes.draw do
           resources :expenses, only: [:index, :create, :show]
           resources :clients
           resources :sales, only: [:index, :create, :show]
-          resources :establishements
+          resources :establishments
           resources :employees
           resources :sale_points
         end
