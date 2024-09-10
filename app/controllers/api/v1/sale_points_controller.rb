@@ -18,6 +18,6 @@ class Api::V1::SalePointsController < ApplicationController
   private
 
   def sale_point_params
-    params.require(:sale_point).permit(:name, :establishement_id)
+    params.require(:sale_point).permit(:name, :establishement_id, :address, :type)
   end
 end
