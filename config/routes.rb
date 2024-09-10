@@ -27,6 +27,7 @@ Rails.application.routes.draw do
           resources :clients
           resources :sales, only: [:index, :create, :show]
           resources :establishements
+          resources :employees
         end
   end
 end
