@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_11_040029) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,14 +73,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_040029) do
     t.index ["stock_item_id"], name: "index_sale_point_stock_items_on_stock_item_id"
   end
 
+  create_table "sale_point_stok_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sale_points", force: :cascade do |t|
     t.string "name"
-    t.string "type"
     t.string "address"
     t.integer "establishment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "sale_point_type"
     t.index ["establishment_id"], name: "index_sale_points_on_establishment_id"
   end
 
@@ -125,7 +128,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_040029) do
   add_foreign_key "sale_items", "stock_items"
   add_foreign_key "sale_point_stock_items", "sale_points"
   add_foreign_key "sale_point_stock_items", "stock_items"
-  add_foreign_key "sale_points", "establishments"
+  add_foreign_key "sale_points", "establishments", column: "establishment_id"
   add_foreign_key "sales", "clients"
   add_foreign_key "sales", "users"
   add_foreign_key "stock_items", "items"
