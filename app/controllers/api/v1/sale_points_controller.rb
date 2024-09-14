@@ -2,22 +2,46 @@ class Api::V1::SalePointsController < ApplicationController
   def index
     @sale_points = SalePoint.all
 
-    render json: {status: "success", data: {sale_points: @sale_points}}
+    render json: { status: "success", data: { sale_points: @sale_points } }
   end
 
   def create
-    @sale_point = SalePoint.new(sale_point_params)
+    ActiveRecord::Base.transaction do
+      @sale_point = SalePoint.new(sale_point_params)
 
-    if @sale_point.save
-      render json: {status: "success", data: {sale_point: @sale_point}}, status: :created
-    else
-      render json: {status: "fail", error: {message: "couldn't create sale point"}}
+      if @sale_point.save
+        related_entity = create_related_entity(@sale_point)
+
+        render json: { status: "success", data: { sale_point: @sale_point, related_entity: related_entity } }, status: :created
+      else
+        render json: { status: "fail", error: { message: @sale_point.errors.full_messages.join(", ") } }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
+      end
     end
+  rescue => e
+    render json: { status: "fail", error: { message: e.message } }, status: :unprocessable_entity
   end
 
   private
 
   def sale_point_params
-    params.require(:sale_point).permit(:name, :establishment_id, :address, :sale_point_type)
+    params.require(:sale_point).permit(:establishment_id, :sale_point_type)
+  end
+
+  def truck_params
+    params.require(:truck).permit(:matricule, :marque)
+  end
+
+  def warehouse_params
+    params.require(:warehouse).permit(:name, :location)
+  end
+
+  def create_related_entity(sale_point)
+    case sale_point.sale_point_type
+    when "truck"
+      Truck.create!(truck_params.merge(sale_point_id: sale_point.id))
+    when "warehouse"
+      Warehouse.create!(warehouse_params.merge(sale_point_id: sale_point.id))
+    end
   end
 end

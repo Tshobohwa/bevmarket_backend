@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_14_183201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,17 +73,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
     t.index ["stock_item_id"], name: "index_sale_point_stock_items_on_stock_item_id"
   end
 
-  create_table "sale_point_stok_items", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "sale_points", force: :cascade do |t|
-    t.string "name"
-    t.string "address"
     t.integer "establishment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "sale_point_type"
     t.index ["establishment_id"], name: "index_sale_points_on_establishment_id"
   end
 
@@ -107,6 +101,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
     t.index ["item_id"], name: "index_stock_items_on_item_id"
   end
 
+  create_table "trucks", force: :cascade do |t|
+    t.string "matricule"
+    t.string "marque"
+    t.integer "sale_point_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_point_id"], name: "index_trucks_on_sale_point_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -120,6 +123,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "warehouses", force: :cascade do |t|
+    t.string "name"
+    t.string "location"
+    t.integer "sale_point_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_point_id"], name: "index_warehouses_on_sale_point_id"
+  end
+
   add_foreign_key "employees", "establishments"
   add_foreign_key "employees", "sale_points"
   add_foreign_key "employees", "users"
@@ -128,8 +140,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_10_114006) do
   add_foreign_key "sale_items", "stock_items"
   add_foreign_key "sale_point_stock_items", "sale_points"
   add_foreign_key "sale_point_stock_items", "stock_items"
-  add_foreign_key "sale_points", "establishments", column: "establishment_id"
+  add_foreign_key "sale_points", "establishments"
   add_foreign_key "sales", "clients"
   add_foreign_key "sales", "users"
   add_foreign_key "stock_items", "items"
+  add_foreign_key "trucks", "sale_points"
+  add_foreign_key "warehouses", "sale_points"
 end
