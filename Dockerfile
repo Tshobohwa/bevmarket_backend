@@ -19,7 +19,7 @@ FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config nano
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -54,6 +54,11 @@ COPY --from=build /rails /rails
 # Run and own only the runtime files AS a non-root user for security
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
+
+# Create the master.key
+RUN EDITOR="nano" bin/rails credentials:edit && \
+    chmod 644 /rails/config/master.key
+
 USER rails:rails
 
 # Entrypoint prepares the database.
