@@ -83,8 +83,8 @@ test:
 #
 production:
   <<: *default
-  database: bevmarket_db_sql
-  username: bevmarket_db_sql_user
-  password: <%= ENV["BEVMARKET_BACKEND_DATABASE_PASSWORD"] %>
-  port: <%= ENV["DATABASE_PORT"] %>
+  database: <%= ENV["BEVMARKET_DATABASE_DB_NAME"] %>
+  username: <%= ENV["BEVMARKET_DATABASE_USERNAME"] %>
+  password: <%= ENV["BEVMARKET_DATABASE_PASSWORD"] %>
+  port: <%= ENV["BEVMARKET_DATABASE_PORT"] %>
   url: <%= ENV["BEVMARKET_DATABASE_URL"] %>
