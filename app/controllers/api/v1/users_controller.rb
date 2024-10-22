@@ -42,8 +42,8 @@ class Api::V1::UsersController < ApplicationController
   # find user by id param
   def find_user
       @user = User.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render json: {status:'fail', error: {message: 'User not found'}}, status: :not_found
+  rescue ActiveRecord::RecordNotFound
+    render json: {status:'fail', error: {message: 'User not found'}}, status: :not_found
   end
 
   # Serialize user params

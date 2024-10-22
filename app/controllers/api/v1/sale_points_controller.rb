@@ -1,8 +1,8 @@
 class Api::V1::SalePointsController < ApplicationController
   def index
-    @sale_points = SalePoint.all
+    @sale_points = SalePoint.includes(:truck, :warehouse).all
 
-    render json: { status: "success", data: { sale_points: @sale_points } }
+    render json: { status: "success", data: { sale_points: @sale_points.as_json(include: {truck:{}, warehouse:{}}) } }
   end
 
   def create
@@ -12,7 +12,8 @@ class Api::V1::SalePointsController < ApplicationController
       if @sale_point.save
         related_entity = create_related_entity(@sale_point)
 
-        render json: { status: "success", data: { sale_point: @sale_point, related_entity: related_entity } }, status: :created
+        render json: { status: "success", data: { sale_point: @sale_point, truck: related_entity } }, status: :created if @sale_point.sale_point_type == "truck"
+        render json: { status: "success", data: { sale_point: @sale_point, warehouse: related_entity } }, status: :created if @sale_point.sale_point_type == "warehouse"        if @sale_point.sale_point_type == "warehouse"
       else
         render json: { status: "fail", error: { message: @sale_point.errors.full_messages.join(", ") } }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
