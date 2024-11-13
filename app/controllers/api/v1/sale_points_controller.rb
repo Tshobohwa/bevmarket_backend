@@ -1,8 +1,15 @@
 class Api::V1::SalePointsController < ApplicationController
+  before_action :find_sale_point, only: [:show]
   def index
     @sale_points = SalePoint.includes(:truck, :warehouse).all
 
     render json: { status: "success", data: { sale_points: @sale_points.as_json(include: {truck:{}, warehouse:{}}) } }
+  end
+
+  def show
+    @sale_point = SalePoint.includes(:truck, :warehouse, :establishment).find(params[:id])
+
+    render json: { status: "success", data: { sale_point: @sale_point.as_json(include: {truck:{}, warehouse:{}, establishment: {}}) } }
   end
 
   def create
@@ -44,5 +51,9 @@ class Api::V1::SalePointsController < ApplicationController
     when "warehouse"
       Warehouse.create!(warehouse_params.merge(sale_point_id: sale_point.id))
     end
+  end
+
+  def find_sale_point
+    @sale_point = SalePoint.find(params[:id])
   end
 end
