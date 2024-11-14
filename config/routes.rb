@@ -30,6 +30,7 @@ Rails.application.routes.draw do
           resources :employees
           resources :sale_points
           resources :purchases, only: [:index]
+          resources :unemployed_users, only: [:index]
         end
   end
 end

@@ -80,6 +80,6 @@ class Api::V1::SalesController < ApplicationController
 
   # Permit new sale params
   def sale_params
-    params.require(:sale).permit(:user_id, :client_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
+    params.require(:sale).permit(:user_id, :credit,:client_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
   end
 end

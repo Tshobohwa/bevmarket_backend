@@ -38,7 +38,7 @@ class Api::V1::ClientsController < ApplicationController
       render json: {status: "fail", error: {message: "Couldn't update client"}}, status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotUnique
-    render json: {status: "fail", error: {message: "A client with this phone number already exists."}}
+    render json: {status: "fail", error: {message: "A client with this phone number already exists."}}, status: :unprocessable_entity
   end
 
   private
