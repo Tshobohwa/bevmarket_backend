@@ -1,7 +1,20 @@
 class Api::V1::SalesController < ApplicationController
   # GET api/v1/sales
   def index
-    @sales = Sale.includes(:client, :user, sale_items: :stock_item).all
+    # Use includes to prevent N+1 query issues and load associated records
+    @sales = Sale.includes(:client, :user, sale_items: :stock_item).order(created_at: :desc)
+
+    # Filter by date range if from and to parameters are present
+    if valid_date?(params[:from]) && valid_date?(params[:to])
+      from_date = Date.parse(params[:from])
+      to_date = Date.parse(params[:to])
+      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day)
+    elsif valid_date?(params[:date])
+      current_date = Date.parse(params[:date])
+      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day)
+    else
+      render json: {status:"success", data: {sales: []}}
+    end
 
     # Render sales with the same structure as the create action
     render json: {
@@ -80,6 +93,10 @@ class Api::V1::SalesController < ApplicationController
 
   # Permit new sale params
   def sale_params
-    params.require(:sale).permit(:user_id, :credit,:client_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
+    params.require(:sale).permit(:user_id, :credit, :client_id, :sale_point_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
+  end
+
+  def valid_date?(date_string)
+    Date.iso8601(date_string) rescue false
   end
 end

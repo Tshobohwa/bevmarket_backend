@@ -4,8 +4,21 @@ class Api::V1::ExpensesController < ApplicationController
   # GET api/v1/expenses
   def index
     @expenses = Expense.all
-    render json: {status: 'success', data: {expenses: @expenses } }
+
+    if valid_date?(params[:from]) && valid_date?(params[:to])
+      from_date = Date.parse(params[:from])
+      to_date = Date.parse(params[:to])
+      @expenses = @expenses.where(created_at: from_date.beginning_of_day..to_date.end_of_day)
+    elsif valid_date?(params[:date])
+      current_date = Date.parse(params[:date])
+      @expenses = @expenses.where(created_at: current_date.beginning_of_day..current_date.end_of_day)
+    else
+      render json: {status: 'success', data: {expenses: []}}
+    end
+
+    render json: { status: 'success', data: { expenses: @expenses } }
   end
+
 
   # GET api/v1/expenses/:id
   def show
@@ -49,5 +62,9 @@ class Api::V1::ExpensesController < ApplicationController
   # Permit expense request params
   def expense_params
     params.require(:expense).permit(:user_id, :amount, :reason)
+  end
+
+  def valid_date?(date_string)
+    Date.iso8601(date_string) rescue false
   end
 end

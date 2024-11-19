@@ -4,4 +4,5 @@ class SalePoint < ApplicationRecord
   has_many :sale_point_stock_items, foreign_key: :sale_point_id
   has_one :truck, foreign_key: :sale_point_id, dependent: :destroy
   has_one :warehouse, foreign_key: :sale_point_id, dependent: :destroy
+  has_many :sales, foreign_key: :sale_point_id
 end
