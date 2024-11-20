@@ -3,7 +3,7 @@ class Api::V1::ClientsController < ApplicationController
 
   # GET api/v1/clients
   def index
-    @clients = Client.all
+    @clients = Client.where(establishment_id: :current_user[:current_establishment_id])
 
     render json: {status: "success", data: {clients: @clients}}
   end
@@ -52,6 +52,6 @@ class Api::V1::ClientsController < ApplicationController
 
   # Permit client request params
   def client_params
-    params.require(:client).permit(:name, :phone_number, :is_partener, :credit)
+    params.require(:client).permit(:name, :phone_number, :is_partener, :credit, :establishment_id)
   end
 end

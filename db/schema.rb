@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_20_135609) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_20_192503) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_135609) do
     t.string "phone_number"
     t.boolean "is_partener", default: false, null: false
     t.float "credit", default: 0.0, null: false
+    t.integer "establishment_id"
+    t.index ["establishment_id"], name: "index_clients_on_establishment_id"
     t.index ["phone_number"], name: "index_clients_on_phone_number", unique: true
   end
 
@@ -144,6 +146,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_135609) do
     t.index ["sale_point_id"], name: "index_warehouses_on_sale_point_id"
   end
 
+  add_foreign_key "clients", "establishments"
   add_foreign_key "employees", "establishments"
   add_foreign_key "employees", "sale_points"
   add_foreign_key "employees", "users"
