@@ -1,7 +1,7 @@
 class Api::V1::SalePointsController < ApplicationController
   before_action :find_sale_point, only: [:show]
   def index
-    @sale_points = SalePoint.includes(:truck, :warehouse).all
+    @sale_points = SalePoint.includes(:truck, :warehouse).where(establishment_id: params[:establishment_id])
 
     render json: { status: "success", data: { sale_points: @sale_points.as_json(include: {truck:{}, warehouse:{}}) } }
   end

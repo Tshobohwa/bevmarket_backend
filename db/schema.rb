@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_20_135609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,6 +38,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "created_by"
+    t.index ["created_by"], name: "index_establishments_on_created_by"
   end
 
   create_table "expenses", force: :cascade do |t|
@@ -45,6 +47,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
     t.datetime "created_at", null: false
     t.integer "user_id"
     t.text "reason"
+    t.integer "establishment_id"
+    t.integer "sale_point_id"
+    t.index ["establishment_id"], name: "index_expenses_on_establishment_id"
+    t.index ["sale_point_id"], name: "index_expenses_on_sale_point_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -52,6 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
     t.integer "bottles_number"
     t.integer "capacity"
     t.string "capacity_unit"
+    t.integer "establishment_id"
+    t.index ["establishment_id"], name: "index_items_on_establishment_id"
   end
 
   create_table "sale_items", force: :cascade do |t|
@@ -121,6 +129,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
     t.datetime "remember_created_at"
     t.string "jti", null: false
     t.boolean "is_employed", default: false
+    t.integer "current_establishment_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -138,7 +147,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_14_161323) do
   add_foreign_key "employees", "establishments"
   add_foreign_key "employees", "sale_points"
   add_foreign_key "employees", "users"
+  add_foreign_key "establishments", "users", column: "created_by"
+  add_foreign_key "expenses", "establishments"
+  add_foreign_key "expenses", "sale_points"
   add_foreign_key "expenses", "users"
+  add_foreign_key "items", "establishments"
   add_foreign_key "sale_items", "sales"
   add_foreign_key "sale_items", "stock_items"
   add_foreign_key "sale_point_stock_items", "sale_points"

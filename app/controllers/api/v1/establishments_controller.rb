@@ -7,12 +7,30 @@ class Api::V1::EstablishmentsController < ApplicationController
   end
 
   def create
-    @establishment = Establishment.new(establishment_params)
+    ActiveRecord::Base.transaction do
+      @establishment = Establishment.new(establishment_params)
 
-    if @establishment.save
-      render json: {status: "success", data: {establishment: @establishment }}, status: :created
-    else
-      render json: {status: "fail", error: {message: "Couldn't create establishment"}}, status: :unprocessable_entity
+      if @establishment.save
+        # Create SalePoint associated with the establishment
+        @sale_point = SalePoint.create!({ establishment_id: @establishment[:id], sale_point_type: "warehouse" })
+
+        # Create Warehouse associated with the SalePoint
+        @warehouse = Warehouse.create!(warehouse_params.merge(sale_point_id: @sale_point[:id]))
+
+        # Find the user who created the establishment and mark them as employed
+        @user = User.find(establishment_params[:created_by])
+        @user.update!({is_employed: true, current_establishment_id: @establishment[:id]})
+
+        # Create an Employee record for the user with an admin role
+        @employee = Employee.create!({ role: "admin", establishment_id: @establishment[:id], user_id: @user[:id], sale_point_id: @sale_point[:id] })
+
+        render json: { status: "success", data: { establishment: @establishment, sale_point: @sale_point, warehouse: @warehouse, user: @user, employee: @employee } }, status: :created
+      else
+        # If establishment fails to save, raise an exception to roll back the transaction
+        raise ActiveRecord::Rollback
+      end
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+      render json: { status: "fail", error: { message: e.message } }, status: :unprocessable_entity
     end
   end
 
@@ -27,7 +45,11 @@ class Api::V1::EstablishmentsController < ApplicationController
   private
 
   def establishment_params
-    params.require(:establishment).permit(:name)
+    params.require(:establishment).permit(:name, :created_by)
+  end
+
+  def warehouse_params
+    params.require(:warehouse).permit(:name, :location)
   end
 
   def find_establishment

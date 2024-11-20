@@ -1,7 +1,7 @@
 class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:destroy, :update, :show]
   def index
-    @items = Item.all
+    @items = Item.where(establishment_id: :current_user[:current_establishment_id])
 
     render json: {status:'success', data: {items: @items}}
   end
@@ -41,7 +41,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:name, :capacity_unit, :capacity, :bottles_number)
+    params.require(:item).permit(:name, :capacity_unit, :capacity, :bottles_number, :establishment_id)
   end
 
   def stock_item_params

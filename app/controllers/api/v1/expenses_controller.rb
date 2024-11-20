@@ -61,7 +61,7 @@ class Api::V1::ExpensesController < ApplicationController
 
   # Permit expense request params
   def expense_params
-    params.require(:expense).permit(:user_id, :amount, :reason)
+    params.require(:expense).permit(:user_id, :amount, :reason, :sale_point_id, :establishment_id)
   end
 
   def valid_date?(date_string)

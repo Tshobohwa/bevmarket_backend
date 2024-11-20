@@ -10,4 +10,5 @@ class User < ApplicationRecord
   has_many :expenses, foreign_key: :user_id
   has_many :sales, foreign_key: :user_id
   has_one :employee, foreign_key: :user_id
+  has_one :establishment, foreign_key: :created_by
 end
