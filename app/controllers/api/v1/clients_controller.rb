@@ -3,7 +3,7 @@ class Api::V1::ClientsController < ApplicationController
 
   # GET api/v1/clients
   def index
-    @clients = Client.where(establishment_id: :current_user[:current_establishment_id])
+    @clients = Client.where(establishment_id: current_user.current_establishment_id)
 
     render json: {status: "success", data: {clients: @clients}}
   end

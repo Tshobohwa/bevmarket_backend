@@ -1,7 +1,15 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :find_employee, only: [:show, :update, :destroy]
   def index
-    @employees = Employee.all
+
+    @current_employee = Employee.find_by(establishment_id: params[:establishment_id], user_id: params[:user_id ])
+
+    render json: { status: "success", data: { current_employee: @current_employee }} if params[:establishment].present? && params[:user_id].present?
+
+
+    @employees = Employee.where(establishment_id: current_user.establishment_id)
+
+    render json: { status: "success", data: { current_employee: @current_employee }}
   end
 
   def create

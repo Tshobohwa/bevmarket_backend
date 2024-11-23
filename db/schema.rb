@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_20_192503) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_21_171739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,7 +96,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_192503) do
     t.integer "user_id"
     t.integer "client_id"
     t.integer "sale_point_id"
+    t.integer "establishment_id"
     t.index ["client_id"], name: "index_sales_on_client_id"
+    t.index ["establishment_id"], name: "index_sales_on_establishment_id"
     t.index ["sale_point_id"], name: "index_sales_on_sale_point_id"
     t.index ["user_id"], name: "index_sales_on_user_id"
   end
@@ -161,6 +163,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_192503) do
   add_foreign_key "sale_point_stock_items", "stock_items"
   add_foreign_key "sale_points", "establishments"
   add_foreign_key "sales", "clients"
+  add_foreign_key "sales", "establishments"
   add_foreign_key "sales", "sale_points"
   add_foreign_key "sales", "users"
   add_foreign_key "stock_items", "items"

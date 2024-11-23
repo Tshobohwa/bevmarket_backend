@@ -3,20 +3,23 @@ class Api::V1::ExpensesController < ApplicationController
 
   # GET api/v1/expenses
   def index
-    @expenses = Expense.all
+    @expenses = Expense.where({establishment_id: current_user.current_establishment_id})
 
     if valid_date?(params[:from]) && valid_date?(params[:to])
       from_date = Date.parse(params[:from])
       to_date = Date.parse(params[:to])
       @expenses = @expenses.where(created_at: from_date.beginning_of_day..to_date.end_of_day)
+
+      render json: { status: 'success', data: { expenses: @expenses } }
     elsif valid_date?(params[:date])
       current_date = Date.parse(params[:date])
       @expenses = @expenses.where(created_at: current_date.beginning_of_day..current_date.end_of_day)
+
+      render json: { status: 'success', data: { expenses: @expenses } }
     else
       render json: {status: 'success', data: {expenses: []}}
     end
 
-    render json: { status: 'success', data: { expenses: @expenses } }
   end
 
 

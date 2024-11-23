@@ -53,8 +53,11 @@ class Api::V1::SalesController < ApplicationController
       end
     end
 
+    client = Client.find(sale_params[:client_id])
+
+    client.update({credit: client[:credit] + sale_params[:credit]})
     # Create the sale
-    sale = Sale.new(user_id: sale_params[:user_id], client_id: sale_params[:client_id])
+    sale = Sale.new(user_id: sale_params[:user_id], client_id: sale_params[:client_id], sale_point_id: sale_params[:sale_point_id], establishment_id: sale_params[:establishment_id])
 
     if sale.save
       # Create the sale items of that sale and subtract the quantity of the stock items
@@ -93,7 +96,7 @@ class Api::V1::SalesController < ApplicationController
 
   # Permit new sale params
   def sale_params
-    params.require(:sale).permit(:user_id, :credit, :client_id, :sale_point_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
+    params.require(:sale).permit(:user_id, :credit, :client_id, :sale_point_id, :establishment_id, sale_items: [:quantity, :stock_item_id, :unit_sale_price])
   end
 
   def valid_date?(date_string)

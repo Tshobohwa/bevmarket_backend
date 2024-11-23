@@ -1,13 +1,14 @@
 class Api::V1::StockItemsController < ApplicationController
   before_action :find_stock_item, only: [:update, :destroy, :show]
   before_action :update_mode, only: [:update]
-
   # GET api/v1/stock_items
   def index
-    @stock_items = StockItem.includes(:item).all
+    @stock_items = StockItem.includes(:item)
+                            .where(items: { establishment_id: current_user.current_establishment_id })
 
-    render json: {status: 'success', data: {stock_items: @stock_items.as_json(include: :item)}}
+    render json: { status: 'success', data: { stock_items: @stock_items.as_json(include: :item) } }
   end
+
 
   # GET api/v1/stock_items/:id
   def show
