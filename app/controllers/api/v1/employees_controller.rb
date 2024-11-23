@@ -7,9 +7,9 @@ class Api::V1::EmployeesController < ApplicationController
     render json: { status: "success", data: { current_employee: @current_employee }} if params[:establishment].present? && params[:user_id].present?
 
 
-    @employees = Employee.where(establishment_id: current_user.establishment_id)
+    @employees = Employee.includes(:user).where(establishment_id: current_user.establishment_id)
 
-    render json: { status: "success", data: { current_employee: @current_employee }}
+    render json: { status: "success", data: { current_employee: @current_employee.as_json(includes: :user) }}
   end
 
   def create
