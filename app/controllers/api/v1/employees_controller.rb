@@ -14,11 +14,11 @@ class Api::V1::EmployeesController < ApplicationController
 
   def create
     @user = User.find(employee_params[:user_id])
-    @user.update!({is_employed: true, current_establishment_id: employee_params[:establishment_id]})
 
     @employee = Employee.new(employee_params)
 
     if @employee.save
+      @user.update!({is_employed: true, current_establishment_id: employee_params[:establishment_id]})
       render json: {status:"success", data: {employee: @employee.as_json(include: [:establishment, :user])}}, status: :created
     else
       render json: {status: "fail", error: {message: "Couldn't create employee"}}, status: :unprocessable_entity
@@ -30,7 +30,15 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update
+    @user = User.find(employee_params[:user_id])
 
+    if @employee.update(employee_params)
+      @user.update(user_params)
+
+      render json: {status: "success", data: @employee.as_json(include: [:user, :sale_point, :establishment])}
+    else
+      render json: {status: "fail", error: {message: "couldn't update employee"}}, status: :unprocessable_entity
+    end
   end
 
   def destroy
