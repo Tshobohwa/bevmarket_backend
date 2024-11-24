@@ -3,8 +3,8 @@ class Api::V1::UsersController < ApplicationController
 
   # GET api/v1/users
   def index
-    @users = User.all
-    render json: {status: 'success', data: {users: @users}}
+    @unemployed_users = User.where(is_employed: false)
+    render json: {status: 'success', data: {unemployed_users: @unemployed_users}}
   end
 
   # GET api/v1/users/:id

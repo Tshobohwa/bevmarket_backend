@@ -13,6 +13,9 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create
+    @user = User.find(employee_params[:user_id])
+    @user.update!({is_employed: true, current_establishment_id: employee_params[:establishment_id]})
+
     @employee = Employee.new(employee_params)
 
     if @employee.save
@@ -44,5 +47,13 @@ class Api::V1::EmployeesController < ApplicationController
     @employee = Employee.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: {status:'fail', error: {message: 'Employee not found'}}, status: :not_found
+  end
+
+  def employee_params
+    params.require(:employee).permit(:establishment_id, :sale_point_id, :role, :user_id)
+  end
+
+  def user_params
+    params.require(:user).permit(:establishment_id, :is_employed)
   end
 end
