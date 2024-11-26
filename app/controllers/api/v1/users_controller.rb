@@ -7,9 +7,20 @@ class Api::V1::UsersController < ApplicationController
     render json: {status: 'success', data: {unemployed_users: @unemployed_users}}
   end
 
+  def get_current_user
+    @user = User.find()
+
+  end
+
   # GET api/v1/users/:id
   def show
-      render json: {status: "success", data: {user: @user}}
+      if @user.is_employed
+        @employee = Employee.find_by({user_id: @user[:id], establishment_id: @user[:current_establishment_id]})
+
+        render json: {status: "success", data: {user: @user, employee: @employee}}
+      else
+        render json: {status: "success", data: {user: @user}}
+      end
   end
 
   # POST api/v1/users
@@ -49,5 +60,9 @@ class Api::V1::UsersController < ApplicationController
   # Serialize user params
   def user_params
     params.require(:user).permit(:name, :email)
+  end
+
+  def current_user_params
+    params.require(:user).permit(:user_id, :current_establishment_id)
   end
 end
