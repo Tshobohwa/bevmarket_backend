@@ -23,7 +23,7 @@ class Api::V1::SalesController < ApplicationController
         sales: @sales.as_json(include: {
           client: {},
           user: {},
-          sale_items: { include: :stock_item }
+          sale_items: { include: {stock_item: {include: :item}} }
         })
       }
     }
