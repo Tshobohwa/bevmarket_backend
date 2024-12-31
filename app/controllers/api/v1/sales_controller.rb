@@ -83,7 +83,9 @@ class Api::V1::SalesController < ApplicationController
       render json: {
         status: "success",
         data: {
-          sale: @sale.as_json(include: [:client, :user, sale_items: { include: :stock_item }]),
+          sale: @sale.as_json(include: [:client, :user,
+          sale_items: { include: {stock_item: {include: :item}} }
+          ]),
           stock_items: @stock_items
         }
       }, status: :created
