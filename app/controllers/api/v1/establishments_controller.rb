@@ -42,6 +42,10 @@ class Api::V1::EstablishmentsController < ApplicationController
     end
   end
 
+  def show
+    render json: {status: "success", data: {establishment: @establishment }}, status: :success
+  end
+
   private
 
   def establishment_params
