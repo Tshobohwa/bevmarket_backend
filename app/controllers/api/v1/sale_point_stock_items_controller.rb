@@ -1,6 +1,6 @@
 class Api::V1::SalePointStockItemsController < ApplicationController
   def index
-    @sale_point_stock_items = SalePointStockItem.all
+    @sale_point_stock_items = SalePointStockItem.where(sale_point_id: params[:sale_point_id])
 
     render json: {status: "success", data: {sale_point_stock_items: @sale_point_stock_items}}
   end
