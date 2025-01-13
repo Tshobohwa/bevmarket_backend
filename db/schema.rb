@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_21_171739) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_11_205527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -115,6 +115,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_171739) do
     t.index ["item_id"], name: "index_stock_items_on_item_id"
   end
 
+  create_table "stock_movements", force: :cascade do |t|
+    t.integer "stock_item_id"
+    t.decimal "quantity"
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stock_item_id"], name: "index_stock_movements_on_stock_item_id"
+  end
+
   create_table "trucks", force: :cascade do |t|
     t.string "matricule"
     t.string "marque"
@@ -167,6 +176,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_171739) do
   add_foreign_key "sales", "sale_points"
   add_foreign_key "sales", "users"
   add_foreign_key "stock_items", "items"
+  add_foreign_key "stock_movements", "stock_items"
   add_foreign_key "trucks", "sale_points"
   add_foreign_key "warehouses", "sale_points"
 end
