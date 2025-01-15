@@ -8,10 +8,10 @@ class Api::V1::SalesController < ApplicationController
     if valid_date?(params[:from]) && valid_date?(params[:to])
       from_date = Date.parse(params[:from])
       to_date = Date.parse(params[:to])
-      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day)
+      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day, establishment_id: current_user.establishment_id)
     elsif valid_date?(params[:date])
       current_date = Date.parse(params[:date])
-      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day)
+      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day, establishment_id: current_user.establishment_id)
     else
       render json: {status:"success", data: {sales: []}}
     end
