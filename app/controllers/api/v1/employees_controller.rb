@@ -7,7 +7,7 @@ class Api::V1::EmployeesController < ApplicationController
 
       render json: { status: "success", data: { current_employee: @current_employee.as_json(include: { sale_point: { include: [:warehouse, :truck] } }) } }
     else
-      @employees = Employee.includes(:user, :establishment, sale_point: [:warehouse, :truck]).where(establishment_id: current_user.establishment_id)
+      @employees = Employee.includes(:user, :establishment, sale_point: [:warehouse, :truck]).where(establishment_id: current_user.current_establishment_id)
 
       render json: { status: "success", data: { employees: @employees.as_json(include: [:user, :establishment, { sale_point: { include: [:warehouse, :truck] } }]) } }
     end
