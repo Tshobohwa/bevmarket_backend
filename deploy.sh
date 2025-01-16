@@ -5,8 +5,8 @@ az login
 
 az acr login --name bevmarket
 
-docker build -t bevmarket:v0.2.4 . # v0.2.4 is the version version to use
+docker build -t bevmarket:v0.2.5 . # v0.2.5 is the version version to use
 
-docker tag bevmarket:v0.2.4 bevmarket.azurecr.io/bevmarket:v0.2.4
+docker tag bevmarket:v0.2.5 bevmarket.azurecr.io/bevmarket:v0.2.5
 
-docker push bevmarket.azurecr.io/bevmarket:v0.2.4
+docker push bevmarket.azurecr.io/bevmarket:v0.2.5
