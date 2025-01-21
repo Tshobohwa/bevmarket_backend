@@ -8,10 +8,12 @@ class Api::V1::SalesController < ApplicationController
     if valid_date?(params[:from]) && valid_date?(params[:to])
       from_date = Date.parse(params[:from])
       to_date = Date.parse(params[:to])
-      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day, establishment_id: current_user.current_establishment_id)
+      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day, establishment_id: current_user.current_establishment_id) if @current_employee["role"] == "admin"
+      @sales = @sales.where(created_at: from_date.beginning_of_day..to_date.end_of_day, establishment_id: current_user.current_establishment_id, sale_point_id: @current_employee["sale_point_id"]) if @current_employee["role"] == "employee"
     elsif valid_date?(params[:date])
       current_date = Date.parse(params[:date])
-      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day, establishment_id: current_user.current_establishment_id)
+      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day, establishment_id: current_user.current_establishment_id) if @current_employee["role"] == "admin"
+      @sales = @sales.where(created_at: current_date.beginning_of_day..current_date.end_of_day, establishment_id: current_user.current_establishment_id, sale_point_id: @current_employee["sale_point_id"]) if @current_employee["role"] == "employee"
     else
       render json: {status:"success", data: {sales: []}}
     end
@@ -104,5 +106,11 @@ class Api::V1::SalesController < ApplicationController
 
   def valid_date?(date_string)
     Date.iso8601(date_string) rescue false
+  end
+
+  def find_current_employee
+    @current_employee = Employee.find_by(user_id: current_user.id)
+  rescue ActiveRecord::RecordNotFound
+    render json:{error: {message: "Employee not found"}}, status: :not_found
   end
 end
