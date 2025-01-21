@@ -1,4 +1,5 @@
 class Api::V1::SalesController < ApplicationController
+  before_action :find_current_employee, only: [:index]
   # GET api/v1/sales
   def index
     # Use includes to prevent N+1 query issues and load associated records
