@@ -37,7 +37,7 @@ class Api::V1::StockItemsController < ApplicationController
 
       # set the last unit buy price to the unit buy price of the request
       last_unit_buy_price = stock_item_params[:unit_buy_price]
-      StockMovement.create(stock_item_id: @stock_item[:id], quantity: stock_item_params[:quantity], movement_type: "purchase", establishment_id: current_user.current_establishment_id)
+      StockMovement.create(stock_item_id: @stock_item[:id], quantity: stock_item_params[:quantity], movement_type: "purchase", establishment_id: current_user.current_establishment_id, unit_price: stock_item_params[:unit_buy_price])
 
       # Calculate the average unit buy price
       # by getting the average between the unit buy price

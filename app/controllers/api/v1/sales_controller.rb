@@ -67,7 +67,7 @@ class Api::V1::SalesController < ApplicationController
       sale_items.each do |sale_item|
         # Create each sale item
         SaleItem.create(stock_item_id: sale_item[:stock_item_id], sale_id: sale[:id], quantity: sale_item[:quantity], unit_sale_price: sale_item[:unit_sale_price])
-        StockMovement.create(stock_item_id: sale_item[:stock_item_id], quantity: sale_item[:quantity], movement_type: "sale", establishment_id: sale_params[:establishment_id])
+        StockMovement.create(stock_item_id: sale_item[:stock_item_id], quantity: sale_item[:quantity], unit_price: sale_item[:unit_sale_price], movement_type: "sale", establishment_id: sale_params[:establishment_id])
 
         # Subtract the quantity of the sale item
         stock_item = StockItem.find(sale_item[:stock_item_id])
