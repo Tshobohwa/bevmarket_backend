@@ -43,8 +43,15 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def destroy
-    # Implement destroy logic if required
+    @user = User.find(@employee[:user_id])
+
+    if @user.update(current_establishment_id: nil, is_employed: false)
+      head :no_content # Returns a 204 No Content response
+    else
+      render json: { error: "Failed to update user" }, status: :unprocessable_entity
+    end
   end
+
 
   private
 
